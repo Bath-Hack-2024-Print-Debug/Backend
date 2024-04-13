@@ -51,7 +51,6 @@ def getSimilarStudents():
                     userDoc['maxPrice'],
                     userDoc['minHousemates'],
                     userDoc['minPrice'],
-                    int(userDoc['shareHouse']),
                     int(userDoc['studentHouse'])
                 ])
 
@@ -61,7 +60,6 @@ def getSimilarStudents():
                     current['maxPrice'],
                     current['minHousemates'],
                     current['minPrice'],
-                    int(current['shareHouse']),
                     int(current['studentHouse'])
                 ])
 
@@ -88,7 +86,6 @@ def setPreferences():
     maxPrice = data.get("maxPrice",0)
     minHousemates = data.get("minHousemates",0)
     minPrice = data.get("minPrice",0)
-    shareHouse = data.get("shareHouse",True)
     studentHouse = data.get("studentHouse",False)
     userID = data.get("userID","anlf@gmail.com")
 
@@ -98,7 +95,6 @@ def setPreferences():
         "maxPrice":maxPrice,
         "minHousemates":minHousemates,
         "minPrice":minPrice,
-        "shareHouse":shareHouse,
         "studentHouse":studentHouse,
         "studentID":userID
     })
@@ -116,7 +112,6 @@ def setPreferences():
 #     "minHousemates": 1,
 #     "maxPrice": 1500,
 #     "minPrice": 500,
-#     "shareHouse": true,
 #     "studentHouse": true
 # }'
 
