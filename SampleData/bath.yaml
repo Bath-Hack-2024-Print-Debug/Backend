@@ -1,0 +1,6 @@
+$schema: https://azuremlschemas.azureedge.net/latest/data.schema.json
+
+type: mltable
+name: bath
+version: 1
+path: ./bath_ml.csv

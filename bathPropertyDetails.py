@@ -1,5 +1,6 @@
 import pandas as pd
 import zoopla as zoopla
+import mltable as mltable
 
 def getPropertiesArea():
     propertyIds = pd.read_csv('bath_ids.csv')
@@ -32,9 +33,11 @@ propertyDetails['propertyType'].fillna('terraced', inplace=True)
 propertyDetails.drop(columns=['sqft', 'baths', 'agentPhone', 'availableFrom', 'floorArea'], inplace=True)
 
 #drop columns not needed for regressing the rent price
-propertyDetails.drop(columns=['uuid','postalCode','listingCondition',
+propertyDetails.drop(columns=['url','uuid','postalCode','listingCondition',
                               'listingStatus','category','images',
                               'additionalLinks','floorPlan','agentAddress',
-                              'agentName'], inplace=True)
+                              'agentName','description'], inplace=True)
 propertyDetails.to_csv('bath_ml.csv')
+
+
 print("run")
