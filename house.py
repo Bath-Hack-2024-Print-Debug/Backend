@@ -2,10 +2,10 @@ from flask import Blueprint, Flask
 from flask import request
 import json
 from database import get_db, containsSimilarPreferences
-
+from auth import check_account
 bp = Blueprint('house', __name__, url_prefix='/house')
 
-
+@check_account(required=True)
 @bp.route('/getHouses')
 def getHouses():
     db = get_db()
@@ -18,6 +18,7 @@ def getHouses():
     json_string = json.dumps(houses)
     return json_string
 
+@check_account(required=True)
 @bp.route('/addHouseDetails')
 def addHouseDetails():
     data = request.json
@@ -39,7 +40,7 @@ def addHouseDetails():
     imageURL = data.get("imageURL")
     description = data.get("description")
     db = get_db()
-    doc_ref = db.collection("houses").document(generateID().__str__())
+    doc_ref = db.collection("houses").document("")
     doc_ref.set({'addressLine1': addressLine1,
     'addressLine2' : addressLine2,
     'available':available,
