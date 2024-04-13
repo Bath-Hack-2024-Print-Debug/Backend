@@ -2,14 +2,8 @@
 
 import json
 import pandas as pd
+import testingAPI as zoopla
 
-# Description: This file is used to read the cache file and return the data in a dictionary format.
-f = open("C:\\Users\\USER\\Documents\\Uni\\CompSci\\Semester 2\\Hackathon\\Backend\\SampleData\\Lists\\oxfordListTest.json")
-unpacked = json.load(f)
-f.close()
-
-# Read the listings from the cache file into a df
-listings = unpacked["data"]["listings"]
-df = pd.DataFrame(listings)
-
+bath_houses = zoopla.get_property_ids("bath-and-n-e-somerset",min_price=100,max_price=10000,min_beds=2,max_beds=4,sort="recent",page="1",fetch_all=True)
+pd.DataFrame(bath_houses).to_csv("bath_houses.csv")
 print("stop")

@@ -43,7 +43,7 @@ def get_location_keys(location, num_results=1):
     out = unpacked[:num_results]
     return out
 
-def get_property_ids(location_key, min_price=0, max_price=10000,
+def get_property_ids(location_key, min_price=0, max_price=1000000,
                      min_beds=1, max_beds=4, sort="recent", page="1",fetch_all=False):
     '''
     Function to get the property ids for a given location key and preferences.
@@ -117,8 +117,8 @@ def get_property_details(property_id):
 #get_property_details(66703015)
 
 # create pydocs for the functions
-pydoc.writedoc(get_location_keys)
-pydoc.writedoc(get_property_ids)
-pydoc.writedoc(get_property_details)
+# pydoc.writedoc(get_location_keys)
+# pydoc.writedoc(get_property_ids)
+# pydoc.writedoc(get_property_details)
 
 print("stop")
