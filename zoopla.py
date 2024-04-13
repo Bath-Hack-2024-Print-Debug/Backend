@@ -1,6 +1,10 @@
+from flask import Blueprint, Flask
+from flask import request
 import http.client
 import json
 import pydoc
+
+bp = Blueprint('zoopla', __name__, url_prefix='/zoopla')
 
 # Set api keys and http connection
 conn = http.client.HTTPSConnection("zoopla4.p.rapidapi.com")
@@ -17,7 +21,8 @@ headers = {
 # data = res.read()
 # unpacked = json.loads(data.decode("utf-8"))
 
-def get_location_keys(location, num_results=1):
+@bp.route('/getLocationKeys')
+def getLocationKeys(location, num_results=1):
     '''
     Function to get the location,key dict for user inputted area name. 
     (can return x number of results if needed)
@@ -43,7 +48,8 @@ def get_location_keys(location, num_results=1):
     out = unpacked[:num_results]
     return out
 
-def get_property_ids(location_key, min_price=0, max_price=1000000,
+@bp.route('/getPropertyIds')
+def getPropertyIds(location_key, min_price=0, max_price=1000000,
                      min_beds=1, max_beds=4, sort="recent", page="1",fetch_all=False):
     '''
     Function to get the property ids for a given location key and preferences.
@@ -90,7 +96,8 @@ def get_property_ids(location_key, min_price=0, max_price=1000000,
 
     return out
 
-def get_property_details(property_id):
+@bp.route('/getPropertyDetails')
+def getPropertyDetails(property_id):
     '''
     Function to get the property details for a given property id.
     arguments:
@@ -112,13 +119,13 @@ def get_property_details(property_id):
         unpacked = None
     return unpacked
 
-#get_location_keys("new-haw",num_results=20)
-#get_property_ids("walton-on-thames",min_price=100,max_price=10000,min_beds=2,max_beds=4,sort="recent",page="1",fetch_all=True)
-#get_property_details(66703015)
+#getLocationKeys("new-haw",num_results=20)
+#getPropertyIds("walton-on-thames",min_price=100,max_price=10000,min_beds=2,max_beds=4,sort="recent",page="1",fetch_all=True)
+#getPropertyDetails(66703015)
 
 # create pydocs for the functions
-# pydoc.writedoc(get_location_keys)
-# pydoc.writedoc(get_property_ids)
-# pydoc.writedoc(get_property_details)
+# pydoc.writedoc(getLocationKeys)
+# pydoc.writedoc(getPropertyIds)
+# pydoc.writedoc(getPropertyDetails)
 
 print("stop")
