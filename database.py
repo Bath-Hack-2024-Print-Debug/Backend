@@ -7,11 +7,12 @@ import json
 
 app = Flask(__name__)
 
+creds = firebase_admin.credentials.Certificate("firebasefile.json")
+firebase_admin.initialize_app(creds)
+db = firestore.client()
+
 @app.route('/getHouses')
 def getHouses():
-    creds = firebase_admin.credentials.Certificate("firebase.json")
-    firebase_admin.initialize_app(creds)
-    db = firestore.client()
     houses_ref = db.collection("houses")
     docs = houses_ref.stream()
     houses = []
@@ -29,7 +30,6 @@ def generateID():
 def getUserDetails():
     data = request.json
     email = data.get("email")
-    creds = firebase_admin.credentials.Certificate("firebase.json")
     firebase_admin.initialize_app(creds)
     db = firestore.client()
     user = db.collection("user").document(email).get()
@@ -38,9 +38,6 @@ def getUserDetails():
 
 @app.route('/addHouseDetails')
 def addHouseDetails():
-    creds = firebase_admin.credentials.Certificate("firebase.json")
-    firebase_admin.initialize_app(creds)
-    db = firestore.client()
     data = request.json
     addressLine1 = data.get("addressLine1")
     addressLine2 = data.get("addressLine2")
@@ -60,7 +57,7 @@ def addHouseDetails():
     imageURL = data.get("imageURL")
     description = data.get("description")
 
-    doc_ref = db.collection("houses").document(generateID(id))
+    doc_ref = db.collection("houses").document(generateID().__str__())
     doc_ref.set({'addressLine1': addressLine1,
     'addressLine2' : addressLine2,
     'available':available,
@@ -81,10 +78,6 @@ def addHouseDetails():
 
 @app.route('/addUserDetails')
 def addUserDetails():
-    creds = firebase_admin.credentials.Certificate("firebase.json")
-
-    firebase_admin.initialize_app(creds)
-    db = firestore.client()
 
     data = request.json
     firstName = data.get("firstName")
@@ -97,3 +90,57 @@ def addUserDetails():
 
     doc_ref = db.collection("user").document(email)
     doc_ref.set({"firstName" : firstName, "lastName" : lastName, "phone":phone, "type":type, "dob":dob, "gender":gender})
+
+def containsSimilarPreferences(potentialPreferences, preferences):
+    containsAny = False
+    for p in potentialPreferences:
+        if p in preferences:
+            return True
+    return False
+
+@app.route('/getSimilarStudents')
+def getSimilarStudents:
+    data = request.json
+    email = data.get("email")
+    user_docs = db.collection("preferences").stream()
+
+    preferences =  db.collection("preferences").document(email).get().to_dict()
+
+    preferences_docs = db.collection("preferences").stream()
+
+    similarUsers = []
+    for preference_set in preferences_docs:
+        potential = preference_set.to_dict()
+
+        potentialPreferences = potential["preferences"]
+        if potential["studentID"] != email and containsSimilarPreferences(potentialPreferences, preferences):
+            similarUsers.append(potential)
+
+
+
+@app.route('/preferences')
+def setPreferences():
+    data = request.json
+
+    locationKeys = data.get("locationKeys")
+    maxHousemates = data.get("maxHousemates")
+    maxPrice = data.get("maxPrice")
+    minHousemates = data.get("minHousemates")
+    minPrice = data.get("minPrice")
+    shareHouse = data.get("shareHouse")
+    studentHouse = data.get("studentHouse")
+    email = data.get("email")
+
+    id = generateID().__str__()
+
+    doc_ref = db.collection("preferences").document(id).set({
+        "locationKeys":locationKeys,
+        "maxHousemates":maxHousemates,
+        "maxPrice":maxPrice,
+        "minHousemates":minHousemates,
+        "minPrice":minPrice,
+        "shareHouse":shareHouse,
+        "studentHouse":studentHouse,
+        "studentID":email
+    })
+
