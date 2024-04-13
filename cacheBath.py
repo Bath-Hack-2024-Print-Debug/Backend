@@ -1,5 +1,3 @@
-# To cache data from zoopla, find and replace all single backslashes with double backslashes in the saved json file.
-
 import json
 import pandas as pd
 import zoopla as zoopla
