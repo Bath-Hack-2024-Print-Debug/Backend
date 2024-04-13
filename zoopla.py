@@ -49,8 +49,8 @@ def getLocationKeys(location, num_results=1):
     return out
 
 @bp.route('/getPropertyIds')
-def getPropertyIds(location_key, min_price=0, max_price=1000000,
-                     min_beds=1, max_beds=4, sort="recent", page="1",fetch_all=False):
+def getPropertyIds(location_key, min_price=20, max_price=25000,
+                     min_beds=1, max_beds=9, sort="recent", page="1",fetch_all=False):
     '''
     Function to get the property ids for a given location key and preferences.
     arguments:
