@@ -1,6 +1,6 @@
 import pandas as pd
 import zoopla as zoopla
-import mltable as mltable
+
 
 def getPropertiesArea(area='bristol'):
     propertyIds = pd.read_csv(f'{area}_ids.csv')

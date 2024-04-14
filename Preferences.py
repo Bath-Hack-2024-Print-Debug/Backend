@@ -28,7 +28,7 @@ def getUserPreferences():
         # if current["userID"] == g.user:
         #     return current
 
-        if current["userID"] == "anlf@gmail.com":
+        if current["userID"] == "4wfR0mYphMZWRlAHK3S6ngOMFp53":
             return current
 
 
@@ -140,8 +140,8 @@ def setPreferences():
 
 
 #
-# curl -X POST "http://127.0.0.1:8080/Preferences/getSimilarStudents" \
+# curl -X POST "http://127.0.0.1:5000/Preferences/getSimilarStudents" \
 # -H "Content-Type: application/json" \
-# -d '{"userID": "anlf@gmail.com"}'
+# -d '{"userID": "4wfR0mYphMZWRlAHK3S6ngOMFp53"}'
 
 

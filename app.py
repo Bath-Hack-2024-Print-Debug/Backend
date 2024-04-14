@@ -24,5 +24,7 @@ def create_app(test_config=None):
     import Preferences
     app.register_blueprint(Preferences.bp)
 
+    import zoopla
+    app.register_blueprint(zoopla.bp)
 
     return app

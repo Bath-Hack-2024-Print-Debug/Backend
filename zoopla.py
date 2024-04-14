@@ -3,6 +3,15 @@ from flask import request
 import http.client
 import json
 import pydoc
+import os
+import sys
+import pandas as pd
+
+# current = os.path.dirname(os.path.realpath(__file__))
+# parent = os.path.dirname(current)
+# sys.path.append(parent.replace("Semester 2", "Semester_2"))
+import Preferences
+from flask import g
 
 bp = Blueprint('zoopla', __name__, url_prefix='/zoopla')
 
@@ -119,27 +128,36 @@ def getPropertyDetails(property_id):
         unpacked = None
     return unpacked
 
-@bp.route('/getPropertyDetailsJSON')
-def getPropertyDetailsJSON(property_id):
-    '''
-    Function to get the property details for a given property id.
-    arguments:
-        property_id: the id of the property you want to get the details for
+@bp.route('/getPropertiesDetailsJSON')
+def getPropertiesDetailsJSON():
+    prefs = Preferences.getUserPreferences()
+    locationId = getLocationKeys(prefs['city'],num_results=1)[0]['key']
+    print(f"About to run if, locationId: {locationId}")
+    if locationId == 'bath' or locationId == 'bristol':
+        print(locationId, prefs['minPrice'], prefs['maxPrice'], prefs['maxHousemates'])
+        propertyIds = getPropertyIds(locationId,min_price=prefs['minPrice'],max_price=prefs['maxPrice'],
+                                    max_beds=prefs['maxHousemates'],
+                                    sort="recent",page="1",fetch_all=False)
+        df = pd.read_csv(f'{locationId}_property_details.csv')
+        df.set_index('id', inplace=True)
+        propertyIds = [int(id) for id in propertyIds]
+        print(propertyIds)
+        df = df[df.index.isin(propertyIds)]
+        jsons = []
+        # add all rows of df to jsons as jsons
+        for index, row in df.iterrows():
+            jsons.append(row.to_json())
+        return jsons
 
-    returns:
-        a dictionary containing the property details
 
-        example:
-        ###see apis in discord###
-    '''
-
-    try:
-        conn.request("GET", f"/properties/{property_id}", headers=headers)
-        res = conn.getresponse()
-        data = res.read()
-    except:
-        data = None
-    return data
+    # add api grabbing functionality
+    else:
+        print("nooooo")
+        propertyIds = getPropertyIds(locationId,min_price=prefs['minPrice'],max_price=prefs['maxPrice'],
+                                    max_beds=prefs['maxHousemates'],
+                                    sort="recent",page="1",fetch_all=True)
+    jsons = []
+    return None
 
 #getLocationKeys("new-haw",num_results=20)
 #getPropertyIds("walton-on-thames",min_price=100,max_price=10000,min_beds=2,max_beds=4,sort="recent",page="1",fetch_all=True)

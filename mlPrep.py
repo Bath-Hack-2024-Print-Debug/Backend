@@ -1,5 +1,5 @@
 import pandas as pd
-import mltable
+
 
 def preprocess_features(csv_file):
     # Read the CSV file into a DataFrame
