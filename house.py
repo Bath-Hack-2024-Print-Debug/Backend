@@ -66,7 +66,7 @@ def getFilteredHouses():
     data = request.json
     minPrice = data.get('minPrice')
     maxPrice = data.get('maxPrice')
-    share
+    
 
 
 
