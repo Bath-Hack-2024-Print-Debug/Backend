@@ -5,7 +5,7 @@ from database import get_db, containsSimilarPreferences, generateID
 from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
 import traceback
-
+from auth import login
 
 def cosine_similarity(A, B):
     dot_product = np.dot(A, B)
@@ -25,11 +25,11 @@ def getUserPreferences():
     for preference_set in preferences:
         current = preference_set.to_dict()
 
-        # if current["userID"] == g.user:
-        #     return current
-
-        if current["userID"] == "4wfR0mYphMZWRlAHK3S6ngOMFp53":
+        if current["userID"] == g.user:
             return current
+
+        #if current["userID"] == "4wfR0mYphMZWRlAHK3S6ngOMFp53":
+        #    return current
 
 
 
@@ -39,16 +39,18 @@ def getDetails(userID):
     return user
 
 
-@bp.route('/getSimilarStudents', methods=["POST"])
+@bp.route('/getSimilarStudents', methods=["GET"])
+@login(required=True)
 def getSimilarStudents():
-    data = request.json
-    # userID = g.user
-    userID = data.get("userID")
+    print("test")
+    userID = g.user
+
+    #userID = data.get("userID")
     if not userID:
         return jsonify({"error": "userID is required"}), 400
 
     try:
-
+        print(userID)
         # Get user preferences
         userPreferences = getUserPreferences()
         similarUsers = []
@@ -69,18 +71,18 @@ def getSimilarStudents():
 
                 userVector = np.array([
                     int(userPreferences["city"] == current["city"]),
-                    userPreferences['maxHousemates'],
-                    userPreferences['maxPrice'],
-                    userPreferences['minPrice'],
-                    genderPreference
+                    int(userPreferences['maxHousemates']),
+                    float(userPreferences['maxPrice']),
+                    float(userPreferences['minPrice']),
+                    int(genderPreference)
                 ])
 
                 currentVector = np.array([
                     int(userPreferences["city"] == current["city"]),
-                    current['maxHousemates'],
-                    current['maxPrice'],
-                    current['minPrice'],
-                    genderPreference
+                    int(current['maxHousemates']),
+                    float(current['maxPrice']),
+                    float(current['minPrice']),
+                    int(genderPreference)
                 ])
 
                 similarity = cosine_similarity(userVector, currentVector)
@@ -116,6 +118,7 @@ def getSimilarStudents():
 
         return jsonify({"error": str(e), "trace": traceback_string}), 500
 @bp.route('/setPreferences', methods=['POST'])
+@login(required=True)
 def setPreferences():
     data = request.json
 
@@ -127,7 +130,7 @@ def setPreferences():
     userID = g.user
 
 
-    doc_ref = get_db().collection("preferences").document(generateID()).set({
+    doc_ref = get_db().collection("preferences").document(str(generateID())).set({
         "city":city,
         "maxHousemates":maxHousemates,
         "maxPrice":maxPrice,

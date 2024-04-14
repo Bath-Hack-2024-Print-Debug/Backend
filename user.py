@@ -1,11 +1,13 @@
 from flask import Blueprint, Flask
 from flask import request,g
 import json
+from auth import login
 from database import get_db, generateID, containsSimilarPreferences
 
 bp = Blueprint('user', __name__, url_prefix='/user')
 
 @bp.route('/getUserDetails')
+@login(required=True)
 def getUserDetails():
     data = request.json
     email = data.get("email")
@@ -15,21 +17,21 @@ def getUserDetails():
     return json_string
 
 
-@bp.route('/addUserDetails')
+@bp.route('/addUserDetails', methods=["POST"])
+@login(required=True)
 def addUserDetails():
     data = request.json
-    firstName = data.get("firstName")
-    lastName = data.get("lastName")
-    type = data.get("type")
-    email = data.get("email")
-    phone = data.get("phone")
-    dob = data.get("dob")
+    name = data.get("name")
     gender = data.get("gender")
+    description = data.get("description")
+    DoB = data.get("dob")
     db = get_db()
-    doc_ref = db.collection("user").document(email)
-    doc_ref.set({"firstName" : firstName, "lastName" : lastName, "phone":phone, "type":type, "dob":dob, "gender":gender})
+    doc_ref = db.collection("user").document(g.user)
+    doc_ref.set({"name" : name, "description" : description, "dob":DoB, "gender":gender})
+    return json.dumps({"status":"success"})
 
 @bp.route('/getSimilarStudents')
+@login(required=True)
 def getSimilarStudents():
     data = request.json
     email = data.get("email")
@@ -49,6 +51,7 @@ def getSimilarStudents():
             similarUsers.append(potential)
 
 @bp.route('/setPreferences')
+@login(required=True)
 def setPreferences():
     data = request.json
 
