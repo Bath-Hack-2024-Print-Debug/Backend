@@ -57,6 +57,8 @@ def getSimilarStudents():
         preferences = get_db().collection("preferences").stream()
 
         for preference_set in preferences:
+            if userPreferences is None:
+                continue
             current = preference_set.to_dict()
 
             genderPreference = 0

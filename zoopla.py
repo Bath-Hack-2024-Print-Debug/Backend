@@ -1,4 +1,4 @@
-from flask import Blueprint, Flask
+from flask import Blueprint, Flask, jsonify
 from flask import request
 import http.client
 import json
@@ -12,6 +12,8 @@ import pandas as pd
 # sys.path.append(parent.replace("Semester 2", "Semester_2"))
 import Preferences
 from flask import g
+
+from auth import login
 
 bp = Blueprint('zoopla', __name__, url_prefix='/zoopla')
 
@@ -129,6 +131,7 @@ def getPropertyDetails(property_id):
     return unpacked
 
 @bp.route('/getPropertiesDetailsJSON')
+@login(required=True)
 def getPropertiesDetailsJSON():
     prefs = Preferences.getUserPreferences()
     locationId = getLocationKeys(prefs['city'],num_results=1)[0]['key']
@@ -143,10 +146,14 @@ def getPropertiesDetailsJSON():
         propertyIds = [int(id) for id in propertyIds]
         print(propertyIds)
         df = df[df.index.isin(propertyIds)]
-        jsons = []
+        #jsons = []
         # add all rows of df to jsons as jsons
-        for index, row in df.iterrows():
-            jsons.append(row.to_json())
+        #for index, row in df.iterrows():
+        #    jsons.append(row.to_json())
+
+        jsons = df.to_json(orient='records')
+        #jsons = jsonify({"data":jsons})
+        print(jsons)
         return jsons
 
 
