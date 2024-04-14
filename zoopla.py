@@ -147,9 +147,9 @@ def getPropertiesDetailsJSON():
         propertyIds = [int(id) for id in propertyIds]
         print(propertyIds)
         df = df[df.index.isin(propertyIds)][['images','price','address','description']]
-        df['images'] = df['images'].apply(lambda x: x.split(",")[0])
+        df['images'] = df['images'].apply(lambda x: x.split(",")[0][2:-1].strip("'"))
         print(df.columns)
-        df['predPrice'] = df.index.map(lambda x: infer.inferRent(x))
+        df['predPrice'] = df.index.map(lambda x: infer.inferRent(x)[0])
         print(df[['predPrice','price']])
         #jsons = []
         # add all rows of df to jsons as jsons
