@@ -18,7 +18,7 @@ def series_to_string_list(row_series):
     return quoted_list
 
 def inferRent(property_id):
-  df = pd.read_csv('./property_ml/bath_ml.csv')
+  df = pd.read_csv('./bath_ml.csv')
   df = df[[
         "id",
         "propertyType",
@@ -41,10 +41,6 @@ def inferRent(property_id):
 
   input_row = df.loc[property_id]
   result = series_to_string_list(input_row)
-  print(result)
-
-  print("pause")
-
 
   def allowSelfSignedHttps(allowed):
       # bypass the server certificate verification on client side
@@ -101,12 +97,10 @@ def inferRent(property_id):
       response = urllib.request.urlopen(req)
 
       result = response.read()
-      print(result)
+      return result
   except urllib.error.HTTPError as error:
       print("The request failed with status code: " + str(error.code))
 
       # Print the headers - they include the requert ID and the timestamp, which are useful for debugging the failure
       print(error.info())
       print(error.read().decode("utf8", 'ignore'))
-
-print(inferRent(66990268))

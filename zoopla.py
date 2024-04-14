@@ -6,6 +6,7 @@ import pydoc
 import os
 import sys
 import pandas as pd
+import infer
 
 # current = os.path.dirname(os.path.realpath(__file__))
 # parent = os.path.dirname(current)
@@ -135,7 +136,7 @@ def getPropertyDetails(property_id):
 def getPropertiesDetailsJSON():
     prefs = Preferences.getUserPreferences()
     locationId = getLocationKeys(prefs['city'],num_results=1)[0]['key']
-    print(f"About to run if, locationId: {locationId}")
+ 
     if locationId == 'bath' or locationId == 'bristol':
         print(locationId, prefs['minPrice'], prefs['maxPrice'], prefs['maxHousemates'])
         propertyIds = getPropertyIds(locationId,min_price=prefs['minPrice'],max_price=prefs['maxPrice'],
@@ -145,7 +146,11 @@ def getPropertiesDetailsJSON():
         df.set_index('id', inplace=True)
         propertyIds = [int(id) for id in propertyIds]
         print(propertyIds)
-        df = df[df.index.isin(propertyIds)]
+        df = df[df.index.isin(propertyIds)][['images','price','address','description']]
+        df['images'] = df['images'].apply(lambda x: x.split(",")[0])
+        print(df.columns)
+        df['predPrice'] = df.index.map(lambda x: infer.inferRent(x))
+        print(df[['predPrice','price']])
         #jsons = []
         # add all rows of df to jsons as jsons
         #for index, row in df.iterrows():
