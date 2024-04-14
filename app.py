@@ -21,5 +21,8 @@ def create_app(test_config=None):
     import house
     app.register_blueprint(house.bp)
 
+    import Preferences
+    app.register_blueprint(Preferences.bp)
+
 
     return app

@@ -58,3 +58,12 @@ def addHouseDetails():
     'description':description,
     'imageURL':imageURL})
 
+@bp.route('/getFilteredHouses',methods=['GET', 'PUSH'])
+def getFilteredHouses():
+    data = request.json
+    minPrice = data.get('minPrice')
+    maxPrice = data.get('maxPrice')
+    share
+
+
+
