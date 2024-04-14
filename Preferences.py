@@ -127,7 +127,7 @@ def setPreferences():
     userID = g.user
 
 
-    doc_ref = get_db().collection("preferences").document(generateID).set({
+    doc_ref = get_db().collection("preferences").document(generateID()).set({
         "city":city,
         "maxHousemates":maxHousemates,
         "maxPrice":maxPrice,
