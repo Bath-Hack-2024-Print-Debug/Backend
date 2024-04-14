@@ -119,6 +119,28 @@ def getPropertyDetails(property_id):
         unpacked = None
     return unpacked
 
+@bp.route('/getPropertyDetailsJSON')
+def getPropertyDetailsJSON(property_id):
+    '''
+    Function to get the property details for a given property id.
+    arguments:
+        property_id: the id of the property you want to get the details for
+
+    returns:
+        a dictionary containing the property details
+
+        example:
+        ###see apis in discord###
+    '''
+
+    try:
+        conn.request("GET", f"/properties/{property_id}", headers=headers)
+        res = conn.getresponse()
+        data = res.read()
+    except:
+        data = None
+    return data
+
 #getLocationKeys("new-haw",num_results=20)
 #getPropertyIds("walton-on-thames",min_price=100,max_price=10000,min_beds=2,max_beds=4,sort="recent",page="1",fetch_all=True)
 #getPropertyDetails(66703015)
