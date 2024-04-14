@@ -22,7 +22,7 @@ bp = Blueprint('zoopla', __name__, url_prefix='/zoopla')
 conn = http.client.HTTPSConnection("zoopla4.p.rapidapi.com")
 
 headers = {
-    'X-RapidAPI-Key': "c58fc50e81msh979c198ee7ad8f0p1ba71bjsn06e05cb7c4ab",
+    'X-RapidAPI-Key': "18ce59c615mshb3a5125e65228e1p1f1e23jsn8973327a4591",
     'X-RapidAPI-Host': "zoopla4.p.rapidapi.com"
 }
 
@@ -135,6 +135,7 @@ def getPropertyDetails(property_id):
 @login(required=True)
 def getPropertiesDetailsJSON():
     prefs = Preferences.getUserPreferences()
+    print(prefs)
     locationId = getLocationKeys(prefs['city'],num_results=1)[0]['key']
  
     if locationId == 'bath' or locationId == 'bristol':
@@ -145,11 +146,13 @@ def getPropertiesDetailsJSON():
         df = pd.read_csv(f'{locationId}_property_details.csv')
         df.set_index('id', inplace=True)
         propertyIds = [int(id) for id in propertyIds]
-        print(propertyIds)
         df = df[df.index.isin(propertyIds)][['images','price','address','description']]
         df['images'] = df['images'].apply(lambda x: x.split(",")[0][2:-1].strip("'"))
-        print(df.columns)
-        df['predPrice'] = df.index.map(lambda x: infer.inferRent(x)[0])
+        print([infer.inferRent(x)[1:-1] for x in df.index])
+        preds = [infer.inferRent(x)[1:-1] for x in df.index]
+        #df['predPrice'] = df.index.map(lambda x: infer.inferRent(x)[0])
+        df['predPrice'] = preds
+        df['predPrice'] = round(((df['predPrice'].astype(float) - (df['price'].astype(float)))/4) + (df['price'].astype(float)),2)
         print(df[['predPrice','price']])
         #jsons = []
         # add all rows of df to jsons as jsons
@@ -158,7 +161,8 @@ def getPropertiesDetailsJSON():
 
         jsons = df.to_json(orient='records')
         #jsons = jsonify({"data":jsons})
-        print(jsons)
+        
+        #print(jsons)
         return jsons
 
 
