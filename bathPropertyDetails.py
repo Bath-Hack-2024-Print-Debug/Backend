@@ -2,8 +2,8 @@ import pandas as pd
 import zoopla as zoopla
 import mltable as mltable
 
-def getPropertiesArea():
-    propertyIds = pd.read_csv('bath_ids.csv')
+def getPropertiesArea(area='bristol'):
+    propertyIds = pd.read_csv(f'{area}_ids.csv')
     propertyDetails = pd.DataFrame(
                     columns=['id','url','propertyType','name','publishedOn',
                             'uuid','postalCode','description','address',
@@ -22,9 +22,10 @@ def getPropertiesArea():
         temp = zoopla.getPropertyDetails(id)
         propertyDetails = pd.concat([propertyDetails,pd.DataFrame([temp])], ignore_index=True)
 
-    propertyDetails.to_csv('bath_property_details.csv')
+    propertyDetails.to_csv(f'{area}_property_details.csv')
 
-propertyDetails = pd.read_csv('bath_property_details.csv')
+#getPropertiesArea()
+propertyDetails = pd.read_csv(f'bath_property_details.csv')
 propertyDetails = propertyDetails.set_index('id', inplace=False)
 #fill in propertyType NaN values with terraced
 propertyDetails['propertyType'].fillna('terraced', inplace=True)

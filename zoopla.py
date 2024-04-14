@@ -10,7 +10,7 @@ bp = Blueprint('zoopla', __name__, url_prefix='/zoopla')
 conn = http.client.HTTPSConnection("zoopla4.p.rapidapi.com")
 
 headers = {
-    'X-RapidAPI-Key': "18ce59c615mshb3a5125e65228e1p1f1e23jsn8973327a4591",
+    'X-RapidAPI-Key': "c58fc50e81msh979c198ee7ad8f0p1ba71bjsn06e05cb7c4ab",
     'X-RapidAPI-Host': "zoopla4.p.rapidapi.com"
 }
 
