@@ -25,7 +25,7 @@ def verify_token(token):
     
 
 
-def check_account(*, required):
+def login(*, required):
     """
     Decorator function to perform login before accessing a route
 

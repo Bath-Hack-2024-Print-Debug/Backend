@@ -2,11 +2,12 @@ from flask import Blueprint, Flask
 from flask import request
 import json
 from database import get_db, containsSimilarPreferences
-
+from auth import login
 bp = Blueprint('house', __name__, url_prefix='/house')
 
 
 @bp.route('/getHouses')
+@login(required=True)
 def getHouses():
     db = get_db()
     houses_ref = db.collection("houses")
@@ -19,6 +20,7 @@ def getHouses():
     return json_string
 
 @bp.route('/addHouseDetails')
+@login(required=True)
 def addHouseDetails():
     data = request.json
     addressLine1 = data.get("addressLine1")
@@ -59,6 +61,7 @@ def addHouseDetails():
     'imageURL':imageURL})
 
 @bp.route('/getFilteredHouses',methods=['GET', 'PUSH'])
+@login(required=True)
 def getFilteredHouses():
     data = request.json
     minPrice = data.get('minPrice')
